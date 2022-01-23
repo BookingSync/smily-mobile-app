@@ -61,6 +61,14 @@ class _MyWebViewState extends State<MyWebView> {
             onWebViewCreated: (controller) {
               this.controller = controller;
             },
+            javascriptChannels: Set.from([
+              JavascriptChannel(
+                  name: 'receiver',
+                  onMessageReceived: (JavascriptMessage message) {
+                    if (message == "disconnect")
+                      controller.loadUrl('webview_URL'.tr());
+                  })
+            ]),
           ),
         ),
         floatingActionButton: FloatingActionButton(

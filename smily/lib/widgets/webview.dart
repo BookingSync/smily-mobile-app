@@ -46,6 +46,7 @@ class _SmilyWebviewState extends State<SmilyWebview> {
                   );
                 }
               },
+              userAgent: "SmilyMobileApp/v1.0",
             );
           },
         ),

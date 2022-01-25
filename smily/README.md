@@ -1,16 +1,17 @@
 # smily
 
-A new Flutter project.
+The is the project app for Smily 
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Before considering working on this project, please make sure Flutter framework is correctly installed and up to date.
 
-A few resources to get you started if this is your first Flutter project:
+You can do that following guidance on flutter website on that link : https://docs.flutter.dev/get-started/install
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+The project is ready for production. To build the android apk you can simply use this command: 
+flutter build apk --split-per-abi 
+the option "--split-per-abi" lets you build an apk for each architecture type
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+you'll find more on that at https://docs.flutter.dev/deployment/android
+
+To build the iOS app you'll need to follow steps detailed on iOS deployment page of flutter docmentation here : https://docs.flutter.dev/deployment/ios

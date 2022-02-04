@@ -9,7 +9,7 @@ The project is ready for production.
 ### Install Flutter
 
 Before considering working on this project, please make sure Flutter framework is correctly installed and up to date.
-You can do that following guidance on flutter website on that link : https://docs.flutter.dev/get-started/install
+You can do that following guidance on flutter website on that link: https://docs.flutter.dev/get-started/install
 
 ### Android build
 

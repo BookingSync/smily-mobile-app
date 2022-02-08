@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import './widgets/webview.dart';
+import 'package:flutter/services.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+    SystemUiOverlay.bottom, //This line is used for showing the bottom bar
+  ]);
 
   runApp(MyApp());
 }

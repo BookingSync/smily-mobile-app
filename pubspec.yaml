@@ -43,7 +43,8 @@ flutter_native_splash:
   ios: true
 
 flutter_icons:
-  image_path: 'Assets/Images/smily_Logo.png'
+  image_path_android: 'Assets/Images/smily_Logo.png'
+  image_path_ios: 'Assets/Images/smily_Logo.png'
   android: true
   ios: true
   

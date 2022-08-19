@@ -29,27 +29,29 @@ class _SmilyWebviewState extends State<SmilyWebview> {
   Widget build(BuildContext context) {
     WebViewController? controller;
     return Scaffold(
-      body: WebView(
-        initialUrl: webViewLink,
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController webViewController) {
-          controller = webViewController;
-        },
-        //Checks every single redirection.
-        onPageStarted: (url) {
-          //Logging out from the website triggers loading the main page.
-          //This condition redirects user straight to login page
-          if (url == "https://www.bookingsync.com/fr" ||
-              url == "https://www.bookingsync.com/en") {
-            setState(
-              () {
-                controller!.loadUrl(webViewLink);
-              },
-            );
-          }
-        },
-        //Initialises useragent as requested
-        userAgent: "SmilyMobileApp/v1.0",
+      body: SafeArea(
+        child: WebView(
+          initialUrl: webViewLink,
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+            controller = webViewController;
+          },
+          //Checks every single redirection.
+          onPageStarted: (url) {
+            //Logging out from the website triggers loading the main page.
+            //This condition redirects user straight to login page
+            if (url == "https://www.bookingsync.com/fr" ||
+                url == "https://www.bookingsync.com/en") {
+              setState(
+                () {
+                  controller!.loadUrl(webViewLink);
+                },
+              );
+            }
+          },
+          //Initialises useragent as requested
+          userAgent: "SmilyMobileApp/v1.0",
+        ),
       ),
     );
   }

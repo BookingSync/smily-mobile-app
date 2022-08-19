@@ -47,7 +47,7 @@ flutter_icons:
   image_path_ios: 'Assets/Images/smily_Logo.png'
   android: true
   ios: true
-  
+
 dev_dependencies:
   flutter_lints: ^1.0.0
   flutter_test:
@@ -80,8 +80,8 @@ flutter:
   fonts:
     - family: OpenSans
       fonts:
-        - asset: Assets/Fonts/Opensans-Regular.ttf
-        - asset: Assets/Fonts/Opensans-Bold.ttf
+        - asset: Assets/Fonts/OpenSans-Regular.ttf
+        - asset: Assets/Fonts/OpenSans-Bold.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

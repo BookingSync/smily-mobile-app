@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         fontFamily: 'Opensans',
       ),
-      home: const SmilyWebview(),
+      home: const SmilyWebView(),
     );
   }
 }

@@ -50,9 +50,9 @@ class _SmilyWebViewState extends State<SmilyWebView> {
     late final String webViewLink;
 
     if (Platform.localeName.toString().split("_").first == "fr") {
-      webViewLink = "https://www.bookingsync.com/fr/users/login?type=smily";
+      webViewLink = "https://phoenix.bookingsync.com/fr/users/login?type=smily";
     } else {
-      webViewLink = "https://www.bookingsync.com/en/users/login?type=smily";
+      webViewLink = "https://phoenix.bookingsync.com/en/users/login?type=smily";
     }
 
     controller
@@ -72,7 +72,8 @@ class _SmilyWebViewState extends State<SmilyWebView> {
           //   }
           // },
           onNavigationRequest: (NavigationRequest request) {
-            bool isExternal = externalUrls.any((url) => request.url.startsWith(url));
+            bool isExternal =
+                externalUrls.any((url) => request.url.startsWith(url));
 
             if (isExternal) {
               _launchUrl(request.url);

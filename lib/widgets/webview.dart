@@ -11,6 +11,13 @@ import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 // #enddocregion platform_imports
 import 'package:url_launcher/url_launcher.dart';
 
+List<String> externalUrls = [
+  'https://bookingsync-core-production',
+  'https://bookingsync-core-staging',
+  'https://changelog.bookingsync.com',
+  'https://changelog.smily.com',
+];
+
 class SmilyWebView extends StatefulWidget {
   const SmilyWebView({Key? key}) : super(key: key);
 
@@ -65,8 +72,11 @@ class _SmilyWebViewState extends State<SmilyWebView> {
           //   }
           // },
           onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith('https://bookingsync-core-production')) {
+            bool isExternal = externalUrls.any((url) => request.url.startsWith(url));
+
+            if (isExternal) {
               _launchUrl(request.url);
+
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;

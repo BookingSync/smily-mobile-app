@@ -61,16 +61,16 @@ class _SmilyWebViewState extends State<SmilyWebView> {
       ..setUserAgent('SmilyMobileApp/v1.0')
       ..setNavigationDelegate(
         NavigationDelegate(
-          // onPageStarted: (String url) {
-          //   if (url == "https://www.bookingsync.com/fr" ||
-          //       url == "https://www.bookingsync.com/en") {
-          //     setState(
-          //           () {
-          //         controller!.loadUrl(webViewLink);
-          //       },
-          //     );
-          //   }
-          // },
+          onPageStarted: (String url) {
+            if (url == "https://phoenix.bookingsync.com/fr" ||
+                url == "https://phoenix.bookingsync.com/en") {
+              setState(
+                    () {
+                      controller!.loadRequest(Uri.parse(webViewLink));
+                },
+              );
+            }
+          },
           onNavigationRequest: (NavigationRequest request) {
             bool isExternal =
                 externalUrls.any((url) => request.url.startsWith(url));

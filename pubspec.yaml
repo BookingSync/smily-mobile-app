@@ -30,10 +30,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  webview_flutter: ^4.4.2
-  webview_flutter_android: ^3.12.1
-  webview_flutter_wkwebview: ^3.9.4
+  webview_flutter: ^4.7.0
+  webview_flutter_android: ^3.15.0
+  webview_flutter_wkwebview: ^3.12.0
   url_launcher: ^6.2.1
+  firebase_core: ^2.25.4
+  firebase_messaging: ^14.7.6
+  overlay_support: ^2.1.0
+  firebase_app_check: ^0.2.1+14
+  firebase_analytics: ^10.8.6
+  device_info_plus: ^9.1.2
+  flutter_local_notifications: ^16.3.2
+  notification_permissions: ^0.6.1
+  mockito: ^5.4.4
 
 flutter_native_splash:
   color: "#ffffff"
@@ -56,7 +65,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -19,19 +19,29 @@ List<String> externalUrls = [
 ];
 
 class SmilyWebView extends StatefulWidget {
-  const SmilyWebView({Key? key}) : super(key: key);
+  final String initialUrl;
+  final String deviceUid;
+  final String? firebaseToken;
+  final bool notificationsEnabled;
+
+  const SmilyWebView({
+    super.key,
+    required this.initialUrl,
+    required this.deviceUid,
+    required this.firebaseToken,
+    required this.notificationsEnabled
+  });
 
   @override
-  _SmilyWebViewState createState() => _SmilyWebViewState();
+  SmilyWebViewState createState() => SmilyWebViewState();
 }
 
-class _SmilyWebViewState extends State<SmilyWebView> {
+class SmilyWebViewState extends State<SmilyWebView> {
   late final WebViewController _controller;
 
   @override
   void initState() {
     super.initState();
-
     // #docregion platform_features
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
@@ -47,12 +57,14 @@ class _SmilyWebViewState extends State<SmilyWebView> {
         WebViewController.fromPlatformCreationParams(params);
     // #enddocregion platform_features
 
-    late final String webViewLink;
+    String webViewLink = widget.initialUrl;
 
-    if (Platform.localeName.toString().split("_").first == "fr") {
-      webViewLink = "https://phoenix.bookingsync.com/fr/users/login?type=smily";
-    } else {
-      webViewLink = "https://phoenix.bookingsync.com/en/users/login?type=smily";
+    if (webViewLink.isEmpty) {
+      if (Platform.localeName.toString().split('_').first == 'fr') {
+        webViewLink = 'https://phoenix.bookingsync.com/fr/users/login?type=smily';
+      } else {
+        webViewLink = 'https://phoenix.bookingsync.com/en/users/login?type=smily';
+      }
     }
 
     controller
@@ -61,16 +73,14 @@ class _SmilyWebViewState extends State<SmilyWebView> {
       ..setUserAgent('SmilyMobileApp/v1.0')
       ..setNavigationDelegate(
         NavigationDelegate(
-          // onPageStarted: (String url) {
-          //   if (url == "https://www.bookingsync.com/fr" ||
-          //       url == "https://www.bookingsync.com/en") {
-          //     setState(
-          //           () {
-          //         controller!.loadUrl(webViewLink);
-          //       },
-          //     );
-          //   }
-          // },
+          onPageFinished: (String url) async {
+            final String jsCode = """
+              window.mobileDeviceUid = "${widget.deviceUid}";
+              window.mobileFirebaseToken = "${widget.firebaseToken ?? ''}";
+              window.notificationsEnabled = ${widget.notificationsEnabled ? 1 : 0};
+            """;
+            await controller.runJavaScript(jsCode);
+          },
           onNavigationRequest: (NavigationRequest request) {
             bool isExternal =
                 externalUrls.any((url) => request.url.startsWith(url));
@@ -80,9 +90,10 @@ class _SmilyWebViewState extends State<SmilyWebView> {
 
               return NavigationDecision.prevent;
             }
+
             return NavigationDecision.navigate;
           },
-        ),
+        )
       )
       ..addJavaScriptChannel(
         'Toaster',
@@ -90,6 +101,12 @@ class _SmilyWebViewState extends State<SmilyWebView> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(message.message)),
           );
+        },
+      )
+      ..addJavaScriptChannel(
+        'messageHandler',
+        onMessageReceived: (JavaScriptMessage javaScriptMessage) {
+          print('SMILY: ${javaScriptMessage.message}');
         },
       )
       ..loadRequest(Uri.parse(webViewLink));
@@ -103,6 +120,14 @@ class _SmilyWebViewState extends State<SmilyWebView> {
     // #enddocregion platform_features
 
     _controller = controller;
+  }
+
+  @override
+  void didUpdateWidget(SmilyWebView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialUrl != oldWidget.initialUrl) {
+      _controller.loadRequest(Uri.parse(widget.initialUrl));
+    }
   }
 
   @override

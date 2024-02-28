@@ -1,4 +1,4 @@
-package com.smily.application
+package com.smily.app
 
 import io.flutter.embedding.android.FlutterActivity
 

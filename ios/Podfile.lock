@@ -128,6 +128,8 @@ PODS:
   - nanopb/encode (2.30909.1)
   - notification_permissions (0.4.4):
     - Flutter
+  - package_info_plus (0.4.5):
+    - Flutter
   - PromisesObjC (2.4.0)
   - url_launcher_ios (0.0.1):
     - Flutter
@@ -143,6 +145,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - notification_permissions (from `.symlinks/plugins/notification_permissions/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
@@ -180,6 +183,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   notification_permissions:
     :path: ".symlinks/plugins/notification_permissions/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   webview_flutter_wkwebview:
@@ -207,6 +212,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   notification_permissions: 825ea1bf2a52ab585c53fd7b5e8e96876d735d4b
+  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   url_launcher_ios: bf5ce03e0e2088bad9cc378ea97fa0ed5b49673b
   webview_flutter_wkwebview: be0f0d33777f1bfd0c9fdcb594786704dbf65f36

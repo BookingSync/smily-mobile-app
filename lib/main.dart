@@ -57,7 +57,7 @@ Future main() async {
     sound: true,
   );
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true, // Required to display a heads up notification
+    alert: true,
     badge: true,
     sound: true,
   );
@@ -99,19 +99,46 @@ class MyAppState extends State<MyApp> {
   String initialUrl = '';
 
   void handleMessage(RemoteMessage message) {
-    const androidPlatformChannelSpecifics = AndroidNotificationDetails('smily', 'Smily', importance: Importance.high, priority: Priority.high);
+    print('NUEVA NOTIFICACION!!!!');
+    print('NUEVA NOTIFICACION!!!!');
+    print('NUEVA NOTIFICACION!!!!');
+    print('title ${message.notification?.title}');
+    print('body ${message.notification?.body}');
 
-    const platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.show(
-        0, 'prueba', 'body', platformChannelSpecifics);
+    // Iterar sobre los elementos de message.data
+    print('Message Data:');
+    for (var entry in message.data.entries) {
+      print('${entry.key}: ${entry.value}');
+    }
+
+    if (Platform.isAndroid) {
+      const androidPlatformChannelSpecifics = AndroidNotificationDetails('smily', 'Smily', importance: Importance.high, priority: Priority.high);
+
+      const platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+      final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+      if (message.notification != null) {
+        flutterLocalNotificationsPlugin.show(
+            0, message.notification!.title, message.notification!.body, platformChannelSpecifics);
+      }
+    }
+   }
+
+  void handleMessageOpened(RemoteMessage message) {
+    print('NUEVA NOTIFICACION CLICKADA!!!!');
+    print('NUEVA NOTIFICACION CLICKADA!!!!');
+    print('NUEVA NOTIFICACION CLICKADA!!!!');
+
+    print('Message Data:');
+    for (var entry in message.data.entries) {
+      print('${entry.key}: ${entry.value}');
+    }
 
     try {
-      if (message.data['booking_url'] != null && message.data['booking_url'].isNotEmpty) {
-        initialUrl = message.data['booking_url'];
-
+      print('click_action_link is ${message.data['click_action_link']}');
+      if (message.data['click_action_link'] != null && message.data['click_action_link'].isNotEmpty) {
         setState(() {
-          initialUrl = message.data['booking_url'];
+          initialUrl = message.data['click_action_link'];
         });
       } else {
 
@@ -122,12 +149,6 @@ class MyAppState extends State<MyApp> {
     }
   }
 
-  @pragma('vm:entry-point')
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    await Firebase.initializeApp();
-    handleMessage(message);
-  }
-
   Future<void> setupInteractedMessage() async {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
@@ -136,7 +157,13 @@ class MyAppState extends State<MyApp> {
       handleMessage(initialMessage);
     }
 
-    FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(handleMessageOpened);
+  }
+
+  @pragma('vm:entry-point')
+  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    await Firebase.initializeApp();
+    handleMessage(message);
   }
 
   @override
@@ -146,7 +173,7 @@ class MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       handleMessage(message);
     });
-    FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(handleMessageOpened);
     setupInteractedMessage();
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }

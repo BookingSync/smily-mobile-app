@@ -32,7 +32,7 @@
 					<key>bitcode</key>
 					<false/>
 					<key>buildNumber</key>
-					<string>2.0</string>
+					<string>2.1</string>
 					<key>certificate</key>
 					<dict>
 						<key>SHA1</key>
@@ -54,7 +54,7 @@
 						<string>BookingSync</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>2.0</string>
+					<string>2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -187,7 +187,7 @@
 				<string>BookingSync</string>
 			</dict>
 			<key>versionNumber</key>
-			<string>2.0.0</string>
+			<string>2.1.0</string>
 		</dict>
 	</array>
 </dict>

@@ -10,6 +10,7 @@ import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 // #enddocregion platform_imports
 import 'package:url_launcher/url_launcher.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 List<String> externalUrls = [
   'https://bookingsync-core-production',
@@ -38,6 +39,7 @@ class SmilyWebView extends StatefulWidget {
 
 class SmilyWebViewState extends State<SmilyWebView> {
   late final WebViewController _controller;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -67,19 +69,37 @@ class SmilyWebViewState extends State<SmilyWebView> {
       }
     }
 
+    String version = '2';
+    String buildNumber = '1';
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      version = packageInfo.version;
+      buildNumber = packageInfo.buildNumber;
+    });
+
+    print('UserAgent');
+    print('SmilyMobileApp/v$version.$buildNumber');
+
     controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
-      ..setUserAgent('SmilyMobileApp/v1.0')
+      ..setUserAgent('SmilyMobileApp/v$version.$buildNumber')
       ..setNavigationDelegate(
         NavigationDelegate(
-          onPageFinished: (String url) async {
+          onPageStarted: (String url) {
+            setState(() {
+              _isLoading = true;
+            });
+          },
+         onPageFinished: (String url) async {
             final String jsCode = """
               window.mobileDeviceUid = "${widget.deviceUid}";
               window.mobileFirebaseToken = "${widget.firebaseToken ?? ''}";
               window.notificationsEnabled = ${widget.notificationsEnabled ? 1 : 0};
             """;
             await controller.runJavaScript(jsCode);
+            setState(() {
+              _isLoading = false;
+            });
           },
           onNavigationRequest: (NavigationRequest request) {
             bool isExternal =
@@ -134,7 +154,12 @@ class SmilyWebViewState extends State<SmilyWebView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: WebViewWidget(controller: _controller),
+        child: Stack(
+          children: [
+            WebViewWidget(controller: _controller),
+            _isLoading ? const Center(child: CircularProgressIndicator()) : Container(),
+          ]
+        )
       ),
     );
   }

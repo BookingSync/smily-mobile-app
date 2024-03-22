@@ -20,7 +20,6 @@ version: 1.0.0+2
 environment:
   sdk: '>=3.1.5 <4.0.0'
 
-
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -44,6 +43,8 @@ dependencies:
   notification_permissions: ^0.6.1
   mockito: ^5.4.4
   package_info_plus: ^5.0.1
+  flutter_inappwebview: ^6.0.0
+  font_awesome_flutter: ^10.7.0
 
 flutter_native_splash:
   color: "#ffffff"

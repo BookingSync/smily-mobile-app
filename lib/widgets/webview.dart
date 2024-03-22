@@ -1,16 +1,20 @@
 //This is the webview widget used to display bookingsync website
 
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+// #enddocregion platform_imports
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 // #docregion platform_imports
 // Import for Android features.
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 // Import for iOS features.
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
-// #enddocregion platform_imports
-import 'package:url_launcher/url_launcher.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+
+import '../smily_theme.dart';
 
 List<String> externalUrls = [
   'https://bookingsync-core-production',
@@ -40,6 +44,7 @@ class SmilyWebView extends StatefulWidget {
 class SmilyWebViewState extends State<SmilyWebView> {
   late final WebViewController _controller;
   bool _isLoading = true;
+  bool _isLoadingError = false;
 
   @override
   void initState() {
@@ -76,9 +81,6 @@ class SmilyWebViewState extends State<SmilyWebView> {
       buildNumber = packageInfo.buildNumber;
     });
 
-    print('UserAgent');
-    print('SmilyMobileApp/v$version.$buildNumber');
-
     controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
@@ -86,9 +88,7 @@ class SmilyWebViewState extends State<SmilyWebView> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (String url) {
-            setState(() {
-              _isLoading = true;
-            });
+            print('Loading page $url');
           },
          onPageFinished: (String url) async {
             final String jsCode = """
@@ -101,17 +101,28 @@ class SmilyWebViewState extends State<SmilyWebView> {
               _isLoading = false;
             });
           },
+          onWebResourceError: (error) {
+            setState(() {
+              _isLoadingError = true;
+            });
+            _showErrorDialog(controller, Uri.parse(webViewLink));
+          },
           onNavigationRequest: (NavigationRequest request) {
-            bool isExternal =
-                externalUrls.any((url) => request.url.startsWith(url));
+            print('onNavigationRequest: ${request.url}');
+            if (!_isLoadingError) {
+              bool isExternal =
+                  externalUrls.any((url) => request.url.startsWith(url));
 
-            if (isExternal) {
-              _launchUrl(request.url);
+              if (isExternal) {
+                _launchUrl(request.url);
 
+                return NavigationDecision.prevent;
+              }
+
+              return NavigationDecision.navigate;
+            } else {
               return NavigationDecision.prevent;
             }
-
-            return NavigationDecision.navigate;
           },
         )
       )
@@ -148,6 +159,107 @@ class SmilyWebViewState extends State<SmilyWebView> {
     if (widget.initialUrl != oldWidget.initialUrl) {
       _controller.loadRequest(Uri.parse(widget.initialUrl));
     }
+  }
+
+  void _showErrorDialog(WebViewController controller, Uri url) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: const SizedBox(
+            height: 200,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: Colors.white
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundColor: SmilyTheme.defaultIconBackground,
+                      radius: 50,
+                      child: FaIcon(
+                        FontAwesomeIcons.wifi,
+                        color: SmilyTheme.defaultIconColor,
+                        size: 58
+                      ),
+                    ),
+
+                    SizedBox(height: 6),
+
+                    Text(
+                      'Looks like you\'re offline',
+                      style: TextStyle(
+                        color: SmilyTheme.modalTitleColor,
+                        fontSize: SmilyTheme.modalTitleSize,
+                        fontWeight: SmilyTheme.modalTitleWeight,
+                      )
+                    ),
+
+                    SizedBox(height: 6),
+
+                    Text(
+                      'Check your internet connection and try again.',
+                      style: TextStyle(
+                        color: SmilyTheme.modalTextColor,
+                        fontSize: SmilyTheme.modalTextSize,
+                        fontWeight: SmilyTheme.modalTextWeight,
+                      )
+                    ),
+                  ]
+                )
+              )
+            )
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: TextButton(
+                    onPressed: () {
+                      exit(0);
+                    },
+                    style: SmilyTheme.buttonDefaultStyle,
+                    child: const Text(
+                      'Quit app',
+                      style: SmilyTheme.buttonDefaultTextStyle,
+                    )
+                  )
+                ),
+
+                const SizedBox(width: 6),
+
+                Expanded(
+                  flex: 1,
+                  child: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _isLoadingError = false;
+                      });
+                      controller.loadRequest(url);
+                      Navigator.of(context).pop();
+                    },
+                    style: SmilyTheme.buttonPrimaryStyle,
+                    child: const Text(
+                      'Try again',
+                      style: SmilyTheme.buttonPrimaryTextStyle,
+                    ),
+                  )
+                )
+              ]
+            )
+          ],
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(SmilyTheme.modalRadius)),
+          ),
+          backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
+          surfaceTintColor: Colors.transparent
+        );
+      },
+    );
   }
 
   @override

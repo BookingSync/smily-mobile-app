@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=C:\src\flutter
-FLUTTER_APPLICATION_PATH=D:\flutter_formation\smily-mobile-app\smily
+FLUTTER_ROOT=/Users/adrianfernandezlopez/development/flutter
+FLUTTER_APPLICATION_PATH=/Users/adrianfernandezlopez/Documents/work/bookingsync/smily-mobile-app
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=lib\main.dart
 FLUTTER_BUILD_DIR=build

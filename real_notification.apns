@@ -1,0 +1,14 @@
+{
+   "aps": {
+      "alert": {
+         "title": "New booking",
+         "subtitle": "New booking was confirmed",
+         "body": "Your rental abcdef was booking from 1-Jan-2024 to 5-Jan-2024",
+         "click_ation": "FLUTTER_NOTIFICATION_CLICK"
+      },
+      "category": "new_booking"
+   },
+   "booking_id": "12345678",
+   "booking_url": "https://app-staging.bookingsync.com/bookings/10124",
+   "gcm.message_id": "123"
+}

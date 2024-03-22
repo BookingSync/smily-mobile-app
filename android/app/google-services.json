@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "139234121847",
+    "project_id": "mobile-app-staging-9f8de",
+    "storage_bucket": "mobile-app-staging-9f8de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139234121847:android:5768c188b6c5811a5f8e72",
+        "android_client_info": {
+          "package_name": "com.smily.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDpkKDdeskLGe0sdhgdsdPIuOYx0SF_rI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

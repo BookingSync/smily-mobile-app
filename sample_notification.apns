@@ -1,0 +1,15 @@
+{
+  "aps": {
+    "alert": {
+      "title": "New Booking confirmed",
+      "body": "Open the app to check the details.",
+      "sound": "default"
+    }
+  },
+  "gcm.message_id": "123",
+  "Simulator Target Bundle": "Runner",
+  "type": "new_offer",
+  "priority": "high",
+  "content_available": true,
+  "mutable_content": true,
+}

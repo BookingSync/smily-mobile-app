@@ -177,7 +177,6 @@ class SmilyWebViewState extends State<SmilyWebView> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     CircleAvatar(
-                      backgroundColor: SmilyTheme.defaultIconBackground,
                       radius: 50,
                       child: FaIcon(
                         FontAwesomeIcons.wifi,

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "234434886003",
+    "project_id": "mobile-app-production-4e790",
+    "storage_bucket": "mobile-app-production-4e790.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234434886003:android:1bea5f4bbf70fb82362d06",
+        "android_client_info": {
+          "package_name": "com.smily"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLukEDKlKzmC_rpHPrd3LKlS8by-Tncxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234434886003:android:e6c1e5da82716c0f362d06",
+        "android_client_info": {
+          "package_name": "com.smily.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLukEDKlKzmC_rpHPrd3LKlS8by-Tncxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

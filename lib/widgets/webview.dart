@@ -13,6 +13,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 // Import for iOS features.
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../smily_theme.dart';
 
@@ -29,13 +30,12 @@ class SmilyWebView extends StatefulWidget {
   final String? firebaseToken;
   final bool notificationsEnabled;
 
-  const SmilyWebView({
-    super.key,
-    required this.initialUrl,
-    required this.deviceUid,
-    required this.firebaseToken,
-    required this.notificationsEnabled
-  });
+  const SmilyWebView(
+      {super.key,
+      required this.initialUrl,
+      required this.deviceUid,
+      required this.firebaseToken,
+      required this.notificationsEnabled});
 
   @override
   SmilyWebViewState createState() => SmilyWebViewState();
@@ -68,9 +68,9 @@ class SmilyWebViewState extends State<SmilyWebView> {
 
     if (webViewLink.isEmpty) {
       if (Platform.localeName.toString().split('_').first == 'fr') {
-        webViewLink = 'https://phoenix.bookingsync.com/fr/users/login?type=smily';
+        webViewLink = dotenv.env['URL_LOGIN_FR']!;
       } else {
-        webViewLink = 'https://phoenix.bookingsync.com/en/users/login?type=smily';
+        webViewLink = dotenv.env['URL_LOGIN_EN']!;
       }
     }
 
@@ -85,47 +85,42 @@ class SmilyWebViewState extends State<SmilyWebView> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
       ..setUserAgent('SmilyMobileApp/v$version.$buildNumber')
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageStarted: (String url) {
-            print('Loading page $url');
-          },
-         onPageFinished: (String url) async {
-            final String jsCode = """
+      ..setNavigationDelegate(NavigationDelegate(
+        onPageStarted: (String url) {},
+        onPageFinished: (String url) async {
+          final String jsCode = """
               window.mobileDeviceUid = "${widget.deviceUid}";
               window.mobileFirebaseToken = "${widget.firebaseToken ?? ''}";
               window.notificationsEnabled = ${widget.notificationsEnabled ? 1 : 0};
             """;
-            await controller.runJavaScript(jsCode);
-            setState(() {
-              _isLoading = false;
-            });
-          },
-          onWebResourceError: (error) {
-            setState(() {
-              _isLoadingError = true;
-            });
-            _showErrorDialog(controller, Uri.parse(webViewLink));
-          },
-          onNavigationRequest: (NavigationRequest request) {
-            print('onNavigationRequest: ${request.url}');
-            if (!_isLoadingError) {
-              bool isExternal =
-                  externalUrls.any((url) => request.url.startsWith(url));
+          await controller.runJavaScript(jsCode);
+          setState(() {
+            _isLoading = false;
+          });
+        },
+        onWebResourceError: (error) {
+          setState(() {
+            _isLoadingError = true;
+          });
+          _showErrorDialog(controller, Uri.parse(webViewLink));
+        },
+        onNavigationRequest: (NavigationRequest request) {
+          if (!_isLoadingError) {
+            bool isExternal =
+                externalUrls.any((url) => request.url.startsWith(url));
 
-              if (isExternal) {
-                _launchUrl(request.url);
+            if (isExternal) {
+              _launchUrl(request.url);
 
-                return NavigationDecision.prevent;
-              }
-
-              return NavigationDecision.navigate;
-            } else {
               return NavigationDecision.prevent;
             }
-          },
-        )
-      )
+
+            return NavigationDecision.navigate;
+          } else {
+            return NavigationDecision.prevent;
+          }
+        },
+      ))
       ..addJavaScriptChannel(
         'Toaster',
         onMessageReceived: (JavaScriptMessage message) {
@@ -166,97 +161,72 @@ class SmilyWebViewState extends State<SmilyWebView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: const SizedBox(
-            height: 200,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: Colors.white
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 50,
-                      child: FaIcon(
-                        FontAwesomeIcons.wifi,
-                        color: SmilyTheme.defaultIconColor,
-                        size: 58
-                      ),
-                    ),
-
-                    SizedBox(height: 6),
-
-                    Text(
-                      'Looks like you\'re offline',
-                      style: TextStyle(
-                        color: SmilyTheme.modalTitleColor,
-                        fontSize: SmilyTheme.modalTitleSize,
-                        fontWeight: SmilyTheme.modalTitleWeight,
-                      )
-                    ),
-
-                    SizedBox(height: 6),
-
-                    Text(
-                      'Check your internet connection and try again.',
-                      style: TextStyle(
-                        color: SmilyTheme.modalTextColor,
-                        fontSize: SmilyTheme.modalTextSize,
-                        fontWeight: SmilyTheme.modalTextWeight,
-                      )
-                    ),
-                  ]
-                )
-              )
-            )
-          ),
-          actions: <Widget>[
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
+            content: const SizedBox(
+                height: 200,
+                child: DecoratedBox(
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: Center(
+                        child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                          CircleAvatar(
+                            radius: 50,
+                            child: FaIcon(FontAwesomeIcons.wifi,
+                                color: SmilyTheme.defaultIconColor, size: 58),
+                          ),
+                          SizedBox(height: 6),
+                          Text('Looks like you\'re offline',
+                              style: TextStyle(
+                                color: SmilyTheme.modalTitleColor,
+                                fontSize: SmilyTheme.modalTitleSize,
+                                fontWeight: SmilyTheme.modalTitleWeight,
+                              )),
+                          SizedBox(height: 6),
+                          Text('Check your internet connection and try again.',
+                              style: TextStyle(
+                                color: SmilyTheme.modalTextColor,
+                                fontSize: SmilyTheme.modalTextSize,
+                                fontWeight: SmilyTheme.modalTextWeight,
+                              )),
+                        ])))),
+            actions: <Widget>[
+              Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                 Expanded(
-                  flex: 1,
-                  child: TextButton(
-                    onPressed: () {
-                      exit(0);
-                    },
-                    style: SmilyTheme.buttonDefaultStyle,
-                    child: const Text(
-                      'Quit app',
-                      style: SmilyTheme.buttonDefaultTextStyle,
-                    )
-                  )
-                ),
-
+                    flex: 1,
+                    child: TextButton(
+                        onPressed: () {
+                          exit(0);
+                        },
+                        style: SmilyTheme.buttonDefaultStyle,
+                        child: const Text(
+                          'Quit app',
+                          style: SmilyTheme.buttonDefaultTextStyle,
+                        ))),
                 const SizedBox(width: 6),
-
                 Expanded(
-                  flex: 1,
-                  child: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _isLoadingError = false;
-                      });
-                      controller.loadRequest(url);
-                      Navigator.of(context).pop();
-                    },
-                    style: SmilyTheme.buttonPrimaryStyle,
-                    child: const Text(
-                      'Try again',
-                      style: SmilyTheme.buttonPrimaryTextStyle,
-                    ),
-                  )
-                )
-              ]
-            )
-          ],
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(SmilyTheme.modalRadius)),
-          ),
-          backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
-          surfaceTintColor: Colors.transparent
-        );
+                    flex: 1,
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _isLoadingError = false;
+                        });
+                        controller.loadRequest(url);
+                        Navigator.of(context).pop();
+                      },
+                      style: SmilyTheme.buttonPrimaryStyle,
+                      child: const Text(
+                        'Try again',
+                        style: SmilyTheme.buttonPrimaryTextStyle,
+                      ),
+                    ))
+              ])
+            ],
+            shape: const RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(SmilyTheme.modalRadius)),
+            ),
+            backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
+            surfaceTintColor: Colors.transparent);
       },
     );
   }
@@ -265,13 +235,12 @@ class SmilyWebViewState extends State<SmilyWebView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            WebViewWidget(controller: _controller),
-            _isLoading ? const Center(child: CircularProgressIndicator()) : Container(),
-          ]
-        )
-      ),
+          child: Stack(children: [
+        WebViewWidget(controller: _controller),
+        _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Container(),
+      ])),
     );
   }
 }

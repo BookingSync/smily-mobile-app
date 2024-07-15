@@ -5,26 +5,23 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:mockito/mockito.dart';
 import 'package:smily/main.dart';
 
+class MockFirebaseMessaging extends Mock implements FirebaseMessaging {}
+
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Message handling', (WidgetTester tester) async {
+    const message = RemoteMessage(data: {
+      'booking_url': 'https://example.com/booking',
+    });
+    final appState = MyAppState();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Simulate message handling
+    appState.handleMessage(message);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(appState.initialUrl, equals('https://example.com/booking'));
   });
 }
